@@ -12,5 +12,5 @@ the [homepage](http://www.vlfeat.org/matconvnet) to know more.
 + **concat** layer.  
 
 ## A Fast Example
-1. copy multitasknn/ to </path/to/Matconvnet/>, add this fold into you Matlab path
+1. copy multitasknn/ to */path/to/Matconvnet/*, add this fold into you Matlab path
 2. run multitask/exmaple/fast_test_mt_cnn.m
