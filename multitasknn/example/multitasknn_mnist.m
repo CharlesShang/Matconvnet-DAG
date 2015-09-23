@@ -17,7 +17,9 @@ imdbPath = fullfile(expDir, 'imdb.mat');
 if exist(imdbPath, 'file')
     imdbPackageDir = fullfile(dataDir,'imdbDir');
    if ~exist(imdbPackageDir, 'dir')
+       fprintf('make dir %s\n', imdbPackageDir);
        mkdir(imdbPackageDir);
+       fprintf('copy %s to %s\n', imdbPath, imdbPackageDir);
        copyfile(imdbPath, imdbPackageDir);
    end
 else
