@@ -3,6 +3,7 @@
 %                                              Init net
 %------------------------------------------------------
 net = multitasknn_mnist_init_net2();
+% net = multitasknn_mnist_init_net();  % original mnist net
 net = multitasknn_preprocess_net(net, 'show', 1);
 
 %------------------------------------------------------
