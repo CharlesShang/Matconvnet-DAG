@@ -166,7 +166,7 @@ switch layer.type
     case 'pdist'
         res_suc = vl_nnpdist(res_node.x, layer.p, 'noRoot', ...
             layer.noRoot, 'epsilon', layer.epsilon) ;
-    % modified layers
+        % modified layers
     case 'concat'
         if ~isfield(res_suc.aux, 'precedes')
             res_suc.aux.precedes = node_pre;
@@ -177,7 +177,13 @@ switch layer.type
                 size(res_suc.x, 3)+1, size(res_suc.x, 3)+size(res_node.x, 3)...
                 ];
         end
-        res_suc.x = vl_nnconcat(res_node.x, res_suc.x) ;
+        res_suc.x = concat(res_node.x, res_suc.x) ;
+    case 'euclideanloss'
+        if isfield(res_node.aux, 'is_label') && res_node.aux.is_label
+            res_suc.aux = res_node.x;
+        elseif ~isempty(res_suc.aux)
+            res_suc.x = euclideanloss(res_node.x, res_suc.aux) ;
+        end
     case 'loss'
         % make sure program always visit label node before any other node 
         % connected to loss layer.
@@ -259,7 +265,7 @@ switch layer.type
     case 'data'
     % modified layers
     case 'concat'
-        dzdx = vl_nnconcat([], [], res_node.dzdx, ...
+        dzdx = concat([], [], res_node.dzdx, ...
             'pre', pre, ...
             'scope', res_node.aux.scope, 'precedes', res_node.aux.precedes);
     case 'loss'
@@ -267,11 +273,14 @@ switch layer.type
             % loss node stores the label
             res_pre.dzdx = vl_nnloss(res_pre.x, res_node.aux, res_node.dzdx) ;
         end
-        
+    case 'euclideanloss'
+        if ~(isfield(res_pre.aux, 'is_label') && res_pre.aux.is_label)
+            res_pre.dzdx = euclideanloss(res_pre.x, res_node.aux, res_node.dzdx);
+        end
     case 'softmaxloss'
         if ~(isfield(res_pre.aux, 'is_label') && res_pre.aux.is_label)
             % loss node stores the label
-            res_pre.dzdx = vl_nnsoftmaxloss(res_pre.x, res_node.aux, res_node.dzdx) ;
+            res_pre.dzdx = vl_nnsoftmaxloss(res_pre.x, res_node.aux, res_node.dzdx);
         end
 end
 if ~isempty(dzdx)
