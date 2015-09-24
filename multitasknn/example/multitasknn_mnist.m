@@ -29,8 +29,8 @@ end
 %------------------------------------------------------
 %                                                Train 
 %------------------------------------------------------
-net = multitasknn_train(net, imdbPackageDir, @getBatch, 'numEpochs', 10, ...
-    'val', [60001:70000]);
+net = multitasknn_train(net, imdbPackageDir, @getBatch, ...
+    'numEpochs', 10, 'expDir', expDir);
 end
 
 function data = getBatch(imdb, batch)

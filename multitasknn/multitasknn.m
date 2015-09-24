@@ -184,7 +184,7 @@ switch layer.type
         elseif ~isempty(res_suc.aux)
             res_suc.x = euclideanloss(res_node.x, res_suc.aux) ;
         end
-    case 'loss'
+    case {'loss', 'softmaxlog'}
         % make sure program always visit label node before any other node 
         % connected to loss layer.
         if isfield(res_node.aux, 'is_label') && res_node.aux.is_label
@@ -192,6 +192,7 @@ switch layer.type
         elseif ~isempty(res_suc.aux) 
             res_suc.x = vl_nnloss(res_node.x, res_suc.aux) ;
         end
+        % Deprecated: use `vl_nnloss` instead
     case 'softmaxloss'
         if isfield(res_node.aux, 'is_label') && res_node.aux.is_label
             res_suc.aux = res_node.x;
@@ -268,7 +269,7 @@ switch layer.type
         dzdx = concat([], [], res_node.dzdx, ...
             'pre', pre, ...
             'scope', res_node.aux.scope, 'precedes', res_node.aux.precedes);
-    case 'loss'
+    case  {'loss', 'softmaxlog'}
         if ~(isfield(res_pre.aux, 'is_label') && res_pre.aux.is_label)
             % loss node stores the label
             res_pre.dzdx = vl_nnloss(res_pre.x, res_node.aux, res_node.dzdx) ;
@@ -277,6 +278,7 @@ switch layer.type
         if ~(isfield(res_pre.aux, 'is_label') && res_pre.aux.is_label)
             res_pre.dzdx = euclideanloss(res_pre.x, res_node.aux, res_node.dzdx);
         end
+        % Deprecated: use `vl_nnloss` instead
     case 'softmaxloss'
         if ~(isfield(res_pre.aux, 'is_label') && res_pre.aux.is_label)
             % loss node stores the label
