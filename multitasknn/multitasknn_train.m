@@ -22,15 +22,15 @@ opts.train = [] ;
 opts.val = [] ;
 opts.numEpochs = 100 ;
 opts.gpus = 1 ; % which GPU devices to use (none, one, or more)
-opts.learningRate = 0.001 ;
+opts.learningRate = 0.0001 ;
 opts.continue = true ;
 opts.expDir = fullfile('data','exp') ;
 opts.conserveMemory = false ;
 opts.backPropDepth = +inf ;
 opts.sync = false ;
 opts.cudnn = true ;
-opts.weightDecay = 0.0005 ;
-opts.momentum = 0.9 ;
+opts.weightDecay = 0.0001 ;
+opts.momentum = 0.95 ;
 opts.errorFunction = 'multiclass' ;
 opts.errorLabels = {} ;
 opts.plotDiagnostics = false ;
@@ -108,8 +108,8 @@ for epoch=1:opts.numEpochs
             fprintf('loading %dth(%d) imdb...', package, numel(imdb_list));
             imdb = load(imdb_list(package).name);
         end
-        if isempty(opts.train), opts.train = find(imdb.images.set==1) ; end
-        if isempty(opts.val), opts.val = find(imdb.images.set==2) ; end
+        opts.train = find(imdb.images.set==1) ;
+        opts.val = find(imdb.images.set==2) ;
         if isnan(opts.train), opts.train = [] ; end
         train = opts.train(randperm(numel(opts.train))) ; % shuffle
         val = opts.val ;
